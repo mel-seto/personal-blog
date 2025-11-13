@@ -11,6 +11,8 @@ This essay explains my approach to building a Large Language Model (LLM) -powere
 
 After completing an intensive nine-month Chinese language program at National Taiwan University, I wanted to keep my language skills sharp while learning more about AI engineering. This led me to create “Chinese Idiom Finder”, a LLM-powered web app that helps users understand chéngyǔ (成语), the four-character idioms central to Chinese expression, as well as other common Chinese sayings. A user inputs a description of a situation in English and the app prompts a LLM and then validates the LLM output with trusted sources before returning a relevant Chinese idiom with its definition and contextual explanation.  
 
+![Chinese Idiom Finder](../idiom-finder-screenshot.png)
+
 *Running LLM Locally was Too Slow*
 
 As this was a personal project, I wanted to see how far I could get without paying for a LLM hosting provider. I tried using Ollama, a free and open source software that allows local LLM deployment and operation. However, due to the storage and memory limits on my computer, I could only run smaller 1-billion-parameter LLMs, which led to poor output accuracy. For example, the LLM would return a Chinese phrase that was not an actual idiom, or something irrelevant to the input situation.  
@@ -33,6 +35,20 @@ While the idiom output returned by higher-parameter LLM was more accurate, the r
 *LLM Output Multi-layer Verification*
 
 No matter the size of a LLM, it can still produce incorrect results. That’s why I implemented a multi-layered validation system to verify its output. After the LLM returns a Chinese idiom, it is first validated against a curated published dataset of 4,000 verified idioms. If no match is found, the system falls back to checking a Chinese English dictionary (CC-EDICT). If this check also fails, the final check is a call to the Wiktionary API. If there is no Wiktionary data for the idiom returned by the LLM, then I return a message saying “No verified idiom found for this situation.” This hybrid approach combines the LLM's contextual understanding with the reliability of multiple reference data sources, effectively eliminating hallucinations from being returned to the user.  
+
+
+```mermaid
+flowchart LR
+    A["User prompt (English situation)"] --> B["LLM: Cerebras GPT-OSS-120B"]
+    B --> C["Verification Layer 1: Idiom Dataset"]
+    C --> D["Verification Layer 2: CC-CEDICT"]
+    D --> E["Verification Layer 3: Wiktionary API"]
+    E --> F["Verified idiom response (Chinese idiom)"]
+
+    %% Failure path
+    B --> X["Verification failed"]
+    X --> Y["Error message returned to user"]
+```    
 
 *Other Improvements*
 
