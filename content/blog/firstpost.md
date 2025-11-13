@@ -11,7 +11,7 @@ This essay explains my approach to building a Large Language Model (LLM) -powere
 
 After completing an intensive nine-month Chinese language program at National Taiwan University, I wanted to keep my language skills sharp while learning more about AI engineering. This led me to create “Chinese Idiom Finder”, a LLM-powered web app that helps users understand chéngyǔ (成语), the four-character idioms central to Chinese expression, as well as other common Chinese sayings. A user inputs a description of a situation in English and the app prompts a LLM and then validates the LLM output with trusted sources before returning a relevant Chinese idiom with its definition and contextual explanation.  
 
-![Chinese Idiom Finder](../idiom-finder-screenshot.png)
+![Chinese Idiom Finder](../images/idiom-finder-screenshot.png)
 
 *Running LLM Locally was Too Slow*
 
@@ -21,14 +21,17 @@ As this was a personal project, I wanted to see how far I could get without payi
 
 Next, I migrated my project to Hugging Face (HF) Spaces, which provides a platform to host my web app, a seamless integration with Gradio (a frontend framework for ML/ AI projects), and more powerful LLMs. However, these larger models still took a long time to return output for the prompt, which looks something like this:
 
+
 ```
 Given a situation, respond with exactly:
-        1. A Chinese idiom (includes 成語、俗語、諺語), 
-        written in simplified Chinese characters,
-        that conveys the idea of the given situation.
-        2. Its literal English translation
-        3. Explain idiom in English. Keep explanation to 2-3 concise sentences.
+    1. A Chinese idiom (includes 成語、俗語、諺語), 
+       written in simplified Chinese characters,
+       that conveys the idea of the given situation.
+    2. Its literal English translation
+    3. Explain idiom in English. 
+       Keep explanation to 2-3 concise sentences.
 ```
+
 
 While the idiom output returned by higher-parameter LLM was more accurate, the response time took up to 30 seconds. To improve the performance, I switched to calling Cerebras, an AI inference provider, that is offered on the HF Spaces platform. However, the monthly inference limit on HF is very low. After some research, I switched directly calling Cerebras AI, which has a Personal Tier with inference rate limits sufficient for an app with about a dozen active users. Switching to Cerebras improved performance significantly - average response time is closer to 1-5 seconds. On Cerebras’s Personal Tier, I have access to Openai’s “gpt-oss-120b”, which is trained on English and Chinese language data. After some manual testing, I found that this model provides accurate enough idiom responses.  
 
@@ -36,19 +39,7 @@ While the idiom output returned by higher-parameter LLM was more accurate, the r
 
 No matter the size of a LLM, it can still produce incorrect results. That’s why I implemented a multi-layered validation system to verify its output. After the LLM returns a Chinese idiom, it is first validated against a curated published dataset of 4,000 verified idioms. If no match is found, the system falls back to checking a Chinese English dictionary (CC-EDICT). If this check also fails, the final check is a call to the Wiktionary API. If there is no Wiktionary data for the idiom returned by the LLM, then I return a message saying “No verified idiom found for this situation.” This hybrid approach combines the LLM's contextual understanding with the reliability of multiple reference data sources, effectively eliminating hallucinations from being returned to the user.  
 
-
-```mermaid
-flowchart LR
-    A["User prompt (English situation)"] --> B["LLM: Cerebras GPT-OSS-120B"]
-    B --> C["Verification Layer 1: Idiom Dataset"]
-    C --> D["Verification Layer 2: CC-CEDICT"]
-    D --> E["Verification Layer 3: Wiktionary API"]
-    E --> F["Verified idiom response (Chinese idiom)"]
-
-    %% Failure path
-    B --> X["Verification failed"]
-    X --> Y["Error message returned to user"]
-```    
+![Diagram of the multi-layered verification system](../images/idiom-finder-diagram.png)
 
 *Other Improvements*
 
