@@ -3,42 +3,28 @@
 	
 		
 		<url>
-			<loc>https://example.com/blog/firstpost/</loc>
+			<loc>https://melseto.work/blog/firstpost/</loc>
 			<lastmod>2025-11-12</lastmod>
 		</url>
 	
 	
 		
 		<url>
-			<loc>https://example.com/about/</loc>
+			<loc>https://melseto.work/blog/</loc>
 			<lastmod>2025-11-12</lastmod>
 		</url>
 	
 	
 		
 		<url>
-			<loc>https://example.com/blog/</loc>
+			<loc>https://melseto.work/</loc>
 			<lastmod>2025-11-12</lastmod>
 		</url>
 	
 	
 		
 		<url>
-			<loc>https://example.com/</loc>
-			<lastmod>2025-11-12</lastmod>
-		</url>
-	
-	
-		
-		<url>
-			<loc>https://example.com/tags/</loc>
-			<lastmod>2025-11-12</lastmod>
-		</url>
-	
-	
-		
-		<url>
-			<loc>https://example.com/feed/feed.xml</loc>
+			<loc>https://melseto.work/tags/</loc>
 			<lastmod>2025-11-12</lastmod>
 		</url>
 	

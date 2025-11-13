@@ -2,6 +2,7 @@
 title: Building a Reliable LLM-Powered Chinese Idiom Finder
 description: This is a post on my blog about my Chinese Idiom Finder project
 date: 2025-11-12
+tags: ["posts"]
 ---
 
 

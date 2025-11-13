@@ -25,7 +25,7 @@ export default async function(eleventyConfig) {
 		.addPassthroughCopy({
 			"./public/": "/"
 		})
-		.addPassthroughCopy("./content/feed/pretty-atom-feed.xsl");
+		// .addPassthroughCopy("./content/feed/pretty-atom-feed.xsl");
 
 	// Run Eleventy when these files change:
 	// https://www.11ty.dev/docs/watch-serve/#add-your-own-watch-targets
@@ -60,30 +60,30 @@ export default async function(eleventyConfig) {
 	eleventyConfig.addPlugin(HtmlBasePlugin);
 	eleventyConfig.addPlugin(InputPathToUrlTransformPlugin);
 
-	eleventyConfig.addPlugin(feedPlugin, {
-		type: "atom", // or "rss", "json"
-		outputPath: "/feed/feed.xml",
-		stylesheet: "pretty-atom-feed.xsl",
-		templateData: {
-			eleventyNavigation: {
-				key: "Feed",
-				order: 4
-			}
-		},
-		collection: {
-			name: "posts",
-			limit: 10,
-		},
-		metadata: {
-			language: "en",
-			title: "Blog Title",
-			subtitle: "This is a longer description about your blog.",
-			base: "https://example.com/",
-			author: {
-				name: "Your Name"
-			}
-		}
-	});
+	// eleventyConfig.addPlugin(feedPlugin, {
+	// 		type: "atom", // or "rss", "json"
+	// 		outputPath: "/feed/feed.xml",
+	// 		stylesheet: "pretty-atom-feed.xsl",
+	// 		templateData: {
+	// 			eleventyNavigation: {
+	// 				key: "Feed",
+	// 				order: 4
+	// 			}
+	// 		},
+	// 		collection: {
+	// 			name: "posts",
+	// 			limit: 10,
+	// 		},
+	// 		metadata: {
+	// 			language: "en",
+	// 			title: "Mel's Blog",
+	// 			subtitle: "A blog about my projects and thoughts.",
+	// 			base: "https://mel-blog.com/",
+	// 			author: {
+	// 				name: "Mel Seto"
+	// 			}
+	// 		}
+	// 	});
 
 	// Image optimization: https://www.11ty.dev/docs/plugins/image/#eleventy-transform
 	eleventyConfig.addPlugin(eleventyImageTransformPlugin, {
