@@ -519,7 +519,7 @@ pre[class*="language-diff-"] {
 <p>While the idiom output returned by higher-parameter LLM was more accurate, the response time took up to 30 seconds. To improve the performance, I switched to calling Cerebras, an AI inference provider, that is offered on the HF Spaces platform. However, the monthly inference limit on HF is very low. After some research, I switched directly calling Cerebras AI, which has a Personal Tier with inference rate limits sufficient for an app with about a dozen active users. Switching to Cerebras improved performance significantly - average response time is closer to 1-5 seconds. On Cerebras’s Personal Tier, I have access to Openai’s “gpt-oss-120b”, which is trained on English and Chinese language data. After some manual testing, I found that this model provides accurate enough idiom responses.</p>
 <p><em>LLM Output Multi-layer Verification</em></p>
 <p>No matter the size of a LLM, it can still produce incorrect results. That’s why I implemented a multi-layered validation system to verify its output. After the LLM returns a Chinese idiom, it is first validated against a curated published dataset of 4,000 verified idioms. If no match is found, the system falls back to checking a Chinese English dictionary (CC-EDICT). If this check also fails, the final check is a call to the Wiktionary API. If there is no Wiktionary data for the idiom returned by the LLM, then I return a message saying “No verified idiom found for this situation.” This hybrid approach combines the LLM's contextual understanding with the reliability of multiple reference data sources, effectively eliminating hallucinations from being returned to the user.</p>
-<p><picture><source type="image/avif" srcset="/personal-blog/blog/idiomfinder/vFRlEr8A8n-3589.avif 3589w"><source type="image/webp" srcset="/personal-blog/blog/idiomfinder/vFRlEr8A8n-3589.webp 3589w"><img loading="lazy" decoding="async" src="/personal-blog/blog/idiomfinder/vFRlEr8A8n-3589.png" alt="Diagram of the multi-layered verification system" width="3589" height="1515"></picture></p>
+<p><picture><source type="image/avif" srcset="/personal-blog/blog/idiomfinder/FTNWRLeP79-3414.avif 3414w"><source type="image/webp" srcset="/personal-blog/blog/idiomfinder/FTNWRLeP79-3414.webp 3414w"><img loading="lazy" decoding="async" src="/personal-blog/blog/idiomfinder/FTNWRLeP79-3414.png" alt="Diagram of the multi-layered verification system" width="3414" height="2112"></picture></p>
 <p><em>Other Improvements</em></p>
 <p>To further improve performance, I implemented session-level caching, so repeated input queries reuse previously verified outputs without re-calling the LLM. This made the app faster (average response decreased from 30 seconds to 2 seconds), more cost-efficient (no need to pay for premium monthly inference calls), and more reproducible (same idiom output for same situation in a given session). Moreover I used a well-known Python pinyin library to produce the pinyin pronunciation for the Chinese idiom output, rather than prompting the LLM for the pinyin, which could be another source of inaccuracy.</p>
 <p><em>Retrospective</em></p>
@@ -535,7 +535,7 @@ pre[class*="language-diff-"] {
 			</p>
 		</footer>
 
-		<!-- This page `/blog/idiomfinder/` was built on 2025-12-10T23:22:11.270Z -->
+		<!-- This page `/blog/idiomfinder/` was built on 2025-12-11T01:30:23.257Z -->
 		<script type="module" src="/personal-blog/dist/cC8wS6ZjFU.js"></script>
 	</body>
 </html>
