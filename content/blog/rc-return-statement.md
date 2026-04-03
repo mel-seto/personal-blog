@@ -1,10 +1,12 @@
 ---
-title: RC Return Statement
+title: Recurse Center Return Statement
 description: My retrospective on completing a 12-week batch at the Recurse Center
 date: 2026-04-03
 tags: ["posts"]
 permalink: /blog/rc-return-statement/index.html
 ---
+
+![Recurse Center logo](../images/recurse-logo.png)
 
 I completed a 12-week batch at the Recurse Center (RC) last Fall (August-Nov 2025). After getting asked a handful of times about my experience at RC, I'm finally getting around to writing my "return statement" which is what the RC community calls our retrospectives on the experience.
 
