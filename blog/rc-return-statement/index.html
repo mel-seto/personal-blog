@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Building a Reliable LLM-Powered Chinese Idiom Finder</title>
-		<meta name="description" content="This is a post on my blog about my Chinese Idiom Finder project">
+		<title>RC Return Statement</title>
+		<meta name="description" content="My retrospective on completing a 12-week batch at the Recurse Center">
 		<link rel="alternate" href="/personal-blog/feed/feed.xml" type="application/atom+xml" title="Mel Seto">
 		
 		
@@ -495,37 +495,42 @@ pre[class*="language-diff-"] {
 				
 
 
-<h1 id="building-a-reliable-llm-powered-chinese-idiom-finder">Building a Reliable LLM-Powered Chinese Idiom Finder</h1>
+<h1 id="rc-return-statement">RC Return Statement</h1>
 
 <ul class="post-metadata">
-	<li><time datetime="2025-11-12">12 November 2025</time></li>
+	<li><time datetime="2026-04-03">03 April 2026</time></li>
 </ul>
 
-<p>This essay explains my approach to building a Large Language Model (LLM) -powered web app during my 12-week programming retreat at the Recurse Center (RC) in Brooklyn, New York this Fall (2025).</p>
-<p>After completing an intensive nine-month Chinese language program at National Taiwan University, I wanted to keep my language skills sharp while learning more about AI engineering. This led me to create “Chinese Idiom Finder”, a LLM-powered web app that helps users understand chéngyǔ (成语), the four-character idioms central to Chinese expression, as well as other common Chinese sayings. A user inputs a description of a situation in English and the app prompts a LLM and then validates the LLM output with trusted sources before returning a relevant Chinese idiom with its definition and contextual explanation.</p>
-<p><picture><source type="image/avif" srcset="/personal-blog/blog/idiomfinder/_nVN17c7HS-2578.avif 2578w"><source type="image/webp" srcset="/personal-blog/blog/idiomfinder/_nVN17c7HS-2578.webp 2578w"><img loading="lazy" decoding="async" src="/personal-blog/blog/idiomfinder/_nVN17c7HS-2578.png" alt="Chinese Idiom Finder" width="2578" height="1376"></picture></p>
-<p><em>Running LLM Locally was Too Slow</em></p>
-<p>As this was a personal project, I wanted to see how far I could get without paying for a LLM hosting provider. I tried using Ollama, a free and open source software that allows local LLM deployment and operation. However, due to the storage and memory limits on my computer, I could only run smaller 1-billion-parameter LLMs, which led to poor output accuracy. For example, the LLM would return a Chinese phrase that was not an actual idiom, or something irrelevant to the input situation.</p>
-<p><em>Hugging Face Spaces: Making use of Gradio and Cerebras AI</em></p>
-<p>Next, I migrated my project to Hugging Face (HF) Spaces, which provides a platform to host my web app, a seamless integration with Gradio (a frontend framework for ML/ AI projects), and more powerful LLMs. However, these larger models still took a long time to return output for the prompt, which looks something like this:</p>
-<pre><code>Given a situation, respond with exactly:
-    1. A Chinese idiom (includes 成語、俗語、諺語), 
-       written in simplified Chinese characters,
-       that conveys the idea of the given situation.
-    2. Its literal English translation
-    3. Explain idiom in English. 
-       Keep explanation to 2-3 concise sentences.
-</code></pre>
-<p>While the idiom output returned by higher-parameter LLM was more accurate, the response time took up to 30 seconds. To improve the performance, I switched to calling Cerebras, an AI inference provider, that is offered on the HF Spaces platform. However, the monthly inference limit on HF is very low. After some research, I switched directly calling Cerebras AI, which has a Personal Tier with inference rate limits sufficient for an app with about a dozen active users. Switching to Cerebras improved performance significantly - average response time is closer to 1-5 seconds. On Cerebras’s Personal Tier, I have access to Openai’s “gpt-oss-120b”, which is trained on English and Chinese language data. After some manual testing, I found that this model provides accurate enough idiom responses.</p>
-<p><em>LLM Output Multi-layer Verification</em></p>
-<p>No matter the size of a LLM, it can still produce incorrect results. That’s why I implemented a multi-layered validation system to verify its output. After the LLM returns a Chinese idiom, it is first validated against a curated published dataset of 4,000 verified idioms. If no match is found, the system falls back to checking a Chinese English dictionary (CC-EDICT). If this check also fails, the final check is a call to the Wiktionary API. If there is no Wiktionary data for the idiom returned by the LLM, then I return a message saying “No verified idiom found for this situation.” This hybrid approach combines the LLM's contextual understanding with the reliability of multiple reference data sources, effectively eliminating hallucinations from being returned to the user.</p>
-<p><picture><source type="image/avif" srcset="/personal-blog/blog/idiomfinder/FTNWRLeP79-3414.avif 3414w"><source type="image/webp" srcset="/personal-blog/blog/idiomfinder/FTNWRLeP79-3414.webp 3414w"><img loading="lazy" decoding="async" src="/personal-blog/blog/idiomfinder/FTNWRLeP79-3414.png" alt="Diagram of the multi-layered verification system" width="3414" height="2112"></picture></p>
-<p><em>Other Improvements</em></p>
-<p>To further improve performance, I implemented session-level caching, so repeated input queries reuse previously verified outputs without re-calling the LLM. This made the app faster (average response decreased from 30 seconds to 2 seconds), more cost-efficient (no need to pay for premium monthly inference calls), and more reproducible (same idiom output for same situation in a given session). Moreover I used a well-known Python pinyin library to produce the pinyin pronunciation for the Chinese idiom output, rather than prompting the LLM for the pinyin, which could be another source of inaccuracy.</p>
-<p><em>Retrospective</em></p>
-<p>“Chinese Idiom Finder” was most recently shared at a demo event at RC in mid-October, where close to 30 users came by to use my app. I also shared the app with about a dozen sample users for more detailed testing and feedback. This project taught me that reliable LLM applications often require hybrid approaches - combining model creativity with structured verification. Moreover, caching can dramatically improve both user experience and reduce AI inference calls. These lessons in iterative development and LLM output verification are directly applicable to building robust ML platforms and production systems.</p>
+<p>I completed a 12-week batch at the Recurse Center (RC) last Fall (August-Nov 2025). After getting asked a handful of times about my experience at RC, I'm finally getting around to writing my &quot;return statement&quot; which is what the RC community calls our retrospectives on the experience.</p>
+<p><em>What is the Recurse Center (RC)?</em></p>
+<blockquote>
+<p>The Recurse Center is the retreat where curious programmers recharge and grow. It's an opportunity to dedicate your time to programming in a focused, supportive, and energizing environment. It's a chance to build and learn new things, to meet and work with kindred spirits, and to accelerate or change the trajectory of your career and life.</p>
+<p>— <a href="https://www.recurse.com">Recurse Center</a></p>
+</blockquote>
+<p>RC has three guiding principles, often referred to as &quot;self-directives&quot;:</p>
+<ul>
+<li>Work at the edge of your abilities</li>
+<li>Build your volitional muscles</li>
+<li>Learn generously</li>
+</ul>
+<p>Participants can join the batches in person in a two-floor Brooklyn hub or remotely from anywhere in the world as long as they can commit to a 11am - 5pm ET daily working window. RC also offers optional recruiting services that match Recursers to partner companies who pay RC a commission. This recruiting business keeps RC free for all participants.</p>
+<p><em>Why did I do RC?</em></p>
+<p>I had planned to take a career break to study Mandarin Chinese in Taiwan. As I was planning my break, one of my programmer friends told me about RC as something I could consider upon returning to NY. Thankfully, I wrote down a reminder to apply to RC upon returning from my language studies, and applied to RC for the Fall 1 2025 batch, and am so glad I got in!</p>
+<p><em>My time at RC</em></p>
+<p>My time at RC not only helped me get back into programming and discover current tech trends, but also gave me a sense of community that I needed upon returning from abroad. I did my 12-week batch in person at the Brooklyn Hub, and would recommend doing RC in-person if possible.</p>
+<p>The first week of RC was overwhelming for me, and I've learned that this is a common experience. Not only was I rusty as a programmer, I was also out of touch with the new jargon of the day such as &quot;agentic&quot; and &quot;MCP&quot;. Fortunately, my batchmates were patient in teaching me concepts I had never heard of. One serendipitous RC friend I made in my first week, Sarah Tan, actually had spent years working in the field of machine learning and artificial intelligence. We started pairing on an AI project related to Chinese idioms to help me get familiar with AI engineering. Sarah and I paired many times on the project in my first couple weeks, and it eventually became the main focus of my 12 week batch. This project idea was completely serendipitous. I wrote a full blog on this <a href="/personal-blog/blog/idiomfinder/">Chinese Idiom Finder</a> project. While working on a problem space related to my Chinese language studies, I also got hands-on experience working with LLM APIs, starting up a MCP server, and testing agentic workflows.</p>
+<p>Besides working on my main project, I also enjoyed the following activities:</p>
+<ul>
+<li>Learning about others' projects in the weekly Thursday presentations</li>
+<li>Having ad-hoc coffee chats with batchmates to learn about their career paths</li>
+<li>Pairing sessions to learn about batchmates' projects</li>
+<li>Discussing how folks were learning AI coding tools, and then pairing with batchmates on getting started with Claude Code and Cursor</li>
+<li>Fun conversations at the Hub dining table and kitchen area</li>
+</ul>
+<p><em>Final thoughts</em></p>
+<p>I am grateful for my time at RC as it was a grounding space and community when I needed it. Friends have asked about my experience and whether they would suggest it. I completed my batch during a time when I was already on a career break, and needed a push to get back into programming and job search mode. I think everyone's needs are different, but RC is definitely a valuable space to find community with other curious programmers.</p>
 
-<ul class="links-nextprev"><li class="links-nextprev-next">Next →<br><a href="/personal-blog/blog/rc-return-statement/">RC Return Statement</a></li>
+<ul class="links-nextprev"><li class="links-nextprev-prev">← Previous<br> <a href="/personal-blog/blog/idiomfinder/">Building a Reliable LLM-Powered Chinese Idiom Finder</a></li>
 </ul>
 
 			
@@ -537,7 +542,7 @@ pre[class*="language-diff-"] {
 			</p>
 		</footer>
 
-		<!-- This page `/blog/idiomfinder/` was built on 2026-04-03T20:38:41.361Z -->
+		<!-- This page `/blog/rc-return-statement/` was built on 2026-04-03T20:38:41.361Z -->
 		<script type="module" src="/personal-blog/dist/cC8wS6ZjFU.js"></script>
 	</body>
 </html>
